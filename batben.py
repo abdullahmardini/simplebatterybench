@@ -5,6 +5,7 @@ stfu pylint
 
 import subprocess
 import time
+import argparse
 import functools
 import re
 import psutil
@@ -118,7 +119,11 @@ def main():
     arbitrary parameter like oh it's a shell script and that's bad because i
     worship object oriented bullshit
     '''
-    test_time = 60
+    parser = argparse.ArgumentParser(description="Simple battery benchmark that's totally useless")
+    parser.add_argument('-t', '--time', type=int, default=60, help='Time to run the test')
+
+    args = parser.parse_args()
+    test_time = args.time // 2
     # sleep_check(test_time)
     wake_check(test_time)
 
