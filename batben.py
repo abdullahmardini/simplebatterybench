@@ -15,15 +15,12 @@ def get_battery_energy():
     Would also be nice to know how much Wh the thing currently has
     """
     command = ["upower", "-i", "/org/freedesktop/UPower/devices/battery_BAT0"]
-    try:
-        output = subprocess.check_output(command)
-        lines = output.decode("utf-8").split("\n")
-        for line in lines:
-            if "energy:" in line:
-                return float(line.split(":")[1].strip().split()[0])
-    except Exception as e:
-        print(f"Error: {e}")
-        exit(1)
+    output = subprocess.check_output(command)
+    lines = output.decode("utf-8").split("\n")
+    for line in lines:
+        if "energy:" in line:
+            return float(line.split(":")[1].strip().split()[0])
+    exit(1)
 
 
 def get_battery_level():
