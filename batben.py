@@ -7,7 +7,6 @@ import subprocess
 import time
 import argparse
 import functools
-import re
 import psutil
 
 
@@ -15,16 +14,13 @@ def get_battery_energy():
     """
     Would also be nice to know how much Wh the thing currently has
     """
-    energy = None
+    command = ["upower", "-i", "/org/freedesktop/UPower/devices/battery_BAT0"]
     try:
-        output = subprocess.check_output(
-            ["upower", "-i", "/org/freedesktop/UPower/devices/battery_BAT0"]
-        )
+        output = subprocess.check_output(command)
         lines = output.decode("utf-8").split("\n")
         for line in lines:
             if "energy:" in line:
-                energy = float(line.split(":")[1].strip().split()[0])
-        return energy
+                return float(line.split(":")[1].strip().split()[0])
     except Exception as e:
         print(f"Error: {e}")
         exit(1)
@@ -67,14 +63,13 @@ def quick_bench(time_secs):
     on battery
     """
     command = ["sysbench", "--threads=8", f"--time={time_secs}", "cpu", "run"]
-    output = subprocess.check_output(command, universal_newlines=True)
+    output = subprocess.check_output(command)
 
-    pattern = r"events per second: (\d+\.\d+)"
-    match = re.search(pattern, output)
-    if match:
-        return float(match.group(1))
-    else:
-        return None
+    lines = output.decode("utf-8").split("\n")
+    for line in lines:
+        if "events per second:" in line:
+            return line
+    return lines
 
 
 def quick_sleep(time_secs):
