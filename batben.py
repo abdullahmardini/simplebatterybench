@@ -83,7 +83,7 @@ def quick_sleep(time_secs):
     uses this rtc wake business to sleep
     """
     command = ["rtcwake", "-m", "freeze", "-s", str(time_secs)]
-    subprocess.check_call(command)
+    subprocess.check_call(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 @measure_battery_life
@@ -92,6 +92,7 @@ def sleep_check(test_time):
     checks battery drain during sleep
     """
     quick_sleep(test_time)
+    print(f"Slept for {test_time} seconds (probably)")
 
 
 @measure_battery_life
