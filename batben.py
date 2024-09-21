@@ -112,9 +112,9 @@ def main():
     """
     apparently I may be the first person to try benchmarking battery life in linux
     i want to know which offers the best savings: tlp vs tuned vs ppd
-    in a quantifiable way instead of which "feels" better or complaining about some
-    arbitrary parameter like oh it's a shell script and that's bad because i
-    worship object oriented bullshit
+    in a quantifiable way instead of which "feels" "better" or complaining about some
+    arbitrary parameter like oh it's a shell script and that's bad because real
+    projects are object oriented or something
     """
     parser = argparse.ArgumentParser(
         description="Simple battery benchmark that's totally useless"
