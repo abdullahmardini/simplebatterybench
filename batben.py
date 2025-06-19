@@ -38,13 +38,20 @@ def measure_battery_life(func):
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        initial_time = time.time()
         initial_battery = get_battery_level()
         initial_energy = get_battery_energy()
         result = func(*args, **kwargs)
+        final_time = time.time()
         final_battery = get_battery_level()
         final_energy = get_battery_energy()
+        if final_energy > initial_energy:
+            print("Energy increased during this period... Did you plug in your laptop?")
         print(f"Battery life spent: {initial_battery - final_battery}%")
-        print(f"Power spent: {initial_energy - final_energy}Wh")
+        elapsed_time = final_time - initial_time
+        watts = (initial_energy - final_energy) / elapsed_time
+        print(f"Power spent: {watts:.3f}W")
+        print(f"Elapsed time: {elapsed_time}")
         return result
 
     return wrapper
@@ -82,7 +89,7 @@ def sleep_check(test_time):
     Input time in seconds
     """
     quick_sleep(test_time)
-    print(f"Slept for {test_time} seconds (probably)")
+    print("Sleep portion follows:")
 
 
 @measure_battery_life
@@ -100,6 +107,7 @@ def wake_check(test_time: int) -> None:
     staring at vscode and thinking about the problem??? who knows
     Input time in seconds
     """
+    print("Wake portion follows")
     bench_time = test_time // 5
     wait_time = (4 * test_time) // 5
     score = quick_bench(bench_time)
