@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-"""
-stfu pylint
-"""
 
 import subprocess
 import time
@@ -10,7 +7,7 @@ import functools
 import psutil
 
 
-def get_battery_energy():
+def get_battery_energy() -> float:
     """
     Would also be nice to know how much Wh the thing currently has
     """
@@ -23,7 +20,7 @@ def get_battery_energy():
     exit(1)
 
 
-def get_battery_level():
+def get_battery_level() -> float:
     """
     Returns the current battery level in percent
     """
@@ -36,7 +33,7 @@ def get_battery_level():
 
 def measure_battery_life(func):
     """
-    Just tells us how much battery we spend during stuff
+    Decorator that tells us how much battery we spend during stuff
     """
 
     @functools.wraps(func)
@@ -53,7 +50,7 @@ def measure_battery_life(func):
     return wrapper
 
 
-def quick_bench(time_secs):
+def quick_bench(time_secs: int) -> list[str]:
     """
     quick and dirty benchmark. not a good measure for latency
     and probably the other things you care about when running
@@ -65,11 +62,11 @@ def quick_bench(time_secs):
     lines = output.decode("utf-8").split("\n")
     for line in lines:
         if "events per second:" in line:
-            return line
+            return [line]
     return lines
 
 
-def quick_sleep(time_secs):
+def quick_sleep(time_secs: int) -> None:
     """
     this one needs root, until i figure out something else
     uses this rtc wake business to sleep
@@ -81,14 +78,15 @@ def quick_sleep(time_secs):
 @measure_battery_life
 def sleep_check(test_time):
     """
-    checks battery drain during sleep
+    Checks battery drain during sleep
+    Input time in seconds
     """
     quick_sleep(test_time)
     print(f"Slept for {test_time} seconds (probably)")
 
 
 @measure_battery_life
-def wake_check(test_time):
+def wake_check(test_time: int) -> None:
     """
     checks battery drain during use.
     This is .... kind of a crappy test.
@@ -100,6 +98,7 @@ def wake_check(test_time):
     So what I want to do is restrict the amount of time we benchmark
     and otherwise just sit idle, which will possibly replicate just
     staring at vscode and thinking about the problem??? who knows
+    Input time in seconds
     """
     bench_time = test_time // 5
     wait_time = (4 * test_time) // 5
@@ -110,23 +109,31 @@ def wake_check(test_time):
 
 def main():
     """
-    apparently I may be the first person to try benchmarking battery life in linux
-    i want to know which offers the best savings: tlp vs tuned vs ppd
-    in a quantifiable way instead of which "feels" "better" or complaining about some
-    arbitrary parameter like oh it's a shell script and that's bad because real
-    projects are object oriented or something
+    Simple script to measure battery impact of wake and sleep in some quantifiable way. This is intended to be a simple and rough heuristic.
     """
     parser = argparse.ArgumentParser(
         description="Simple battery benchmark that's totally useless"
     )
     parser.add_argument(
-        "-t", "--time", type=int, default=60, help="Time to run the test"
+        "-t", "--time", type=int, default=60, help="Time in seconds to run the test"
+    )
+    parser.add_argument(
+        "-s", "--sleep", action="store_true", default=False, help="Sleep part of the test",
+    )
+    parser.add_argument(
+        "-w", "--wake", action="store_true", default=False, help="Wake part of the test"
     )
 
     args = parser.parse_args()
-    test_time = args.time // 2
-    sleep_check(test_time)
-    wake_check(test_time)
+    test_time = args.time
+
+    if not args.sleep and not args.wake:
+        args.sleep = args.wake = True
+
+    if args.sleep:
+        sleep_check(test_time)
+    if args.wake:
+        wake_check(test_time)
 
 
 if __name__ == "__main__":
