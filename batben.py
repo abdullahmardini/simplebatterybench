@@ -5,6 +5,7 @@ import time
 import argparse
 import functools
 import psutil
+import devsim
 
 
 def get_battery_energy() -> float:
@@ -47,30 +48,13 @@ def measure_battery_life(func):
         final_energy = get_battery_energy()
         if final_energy > initial_energy:
             print("Energy increased during this period... Did you plug in your laptop?")
-        print(f"Battery life spent: {initial_battery - final_battery}%")
+        print(f"Battery life spent: {initial_battery - final_battery:.1f}%")
         elapsed_time = final_time - initial_time
-        watts = (initial_energy - final_energy) / elapsed_time
-        print(f"Power spent: {watts:.3f}W")
-        print(f"Elapsed time: {elapsed_time}")
+        print(f"Power spent: {initial_energy - final_energy:.1f}Wh")
+        print(f"Elapsed time: {elapsed_time:.1f}")
         return result
 
     return wrapper
-
-
-def quick_bench(time_secs: int) -> list[str]:
-    """
-    quick and dirty benchmark. not a good measure for latency
-    and probably the other things you care about when running
-    on battery
-    """
-    command = ["sysbench", "--threads=8", f"--time={time_secs}", "cpu", "run"]
-    output = subprocess.check_output(command)
-
-    lines = output.decode("utf-8").split("\n")
-    for line in lines:
-        if "events per second:" in line:
-            return [line]
-    return lines
 
 
 def quick_sleep(time_secs: int) -> None:
@@ -107,12 +91,8 @@ def wake_check(test_time: int) -> None:
     staring at vscode and thinking about the problem??? who knows
     Input time in seconds
     """
-    print("Wake portion follows")
-    bench_time = test_time // 5
-    wait_time = (4 * test_time) // 5
-    score = quick_bench(bench_time)
-    time.sleep(wait_time)
-    print(f"perf score of {score}")
+    print("Running simulated workload...")
+    devsim.dev_workload(test_time)
 
 
 def main():
@@ -120,13 +100,17 @@ def main():
     Simple script to measure battery impact of wake and sleep in some quantifiable way. This is intended to be a simple and rough heuristic.
     """
     parser = argparse.ArgumentParser(
-        description="Simple battery benchmark that's totally useless"
+        description="Simple battery benchmark that's mostly useless"
     )
     parser.add_argument(
         "-t", "--time", type=int, default=60, help="Time in seconds to run the test"
     )
     parser.add_argument(
-        "-s", "--sleep", action="store_true", default=False, help="Sleep part of the test",
+        "-s",
+        "--sleep",
+        action="store_true",
+        default=False,
+        help="Sleep part of the test",
     )
     parser.add_argument(
         "-w", "--wake", action="store_true", default=False, help="Wake part of the test"

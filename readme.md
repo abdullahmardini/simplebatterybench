@@ -1,5 +1,5 @@
 # What is this?
-I just want to know if the different battery tuning stuff, ie `ppd` vs `tlp` vs `tuneD` actually make any difference, and if there's a difference between them.
+I just want to know if the different battery tuning stuff, i.e. `ppd` vs `tlp` vs `tuneD` actually make any difference, and if there's a difference between them.
 Note that your particular laptop model will matter a lot, depending on firmware bugs and how that responds to different tuning knobs. It looks like the defaults are fantastic on Thinkpads.
 
 # TODO
