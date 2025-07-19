@@ -59,8 +59,8 @@ def measure_battery_life(func):
 
 def quick_sleep(time_secs: int) -> None:
     """
-    this one needs root, until i figure out something else
-    uses this rtc wake business to sleep
+    this one needs root, by linux design - not mine.
+    uses rtc wake to sleep
     """
     command = ["rtcwake", "-m", "freeze", "-s", str(time_secs)]
     subprocess.check_call(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -79,17 +79,8 @@ def sleep_check(test_time):
 @measure_battery_life
 def wake_check(test_time: int) -> None:
     """
-    checks battery drain during use.
-    This is .... kind of a crappy test.
-    My idea is that the typical developer will spend most of their
-    time using an electron app or two (and they will probably crash)
-    in addition to a browser and probably docker. This should have
-    a moderate energy impact, coupled with the occassional high
-    impact energy usage, like say compiling.
-    So what I want to do is restrict the amount of time we benchmark
-    and otherwise just sit idle, which will possibly replicate just
-    staring at vscode and thinking about the problem??? who knows
-    Input time in seconds
+    Checks battery drain during use.
+    Ultimately this is a synthetic test. My assumption is that most workloads will have some sustained but light use, followed with bursts of compute. I think as long as it's close enough, deterministic, and measurable, it should be good enough.
     """
     print("Running simulated workload...")
     devsim.dev_workload(test_time)
@@ -100,7 +91,7 @@ def main():
     Simple script to measure battery impact of wake and sleep in some quantifiable way. This is intended to be a simple and rough heuristic.
     """
     parser = argparse.ArgumentParser(
-        description="Simple battery benchmark that's mostly useless"
+        description="Simple battery benchmark to measure tuning impact on energy consumption"
     )
     parser.add_argument(
         "-t", "--time", type=int, default=60, help="Time in seconds to run the test"
@@ -110,10 +101,14 @@ def main():
         "--sleep",
         action="store_true",
         default=False,
-        help="Sleep part of the test",
+        help="Measure battery impact during sleep",
     )
     parser.add_argument(
-        "-w", "--wake", action="store_true", default=False, help="Wake part of the test"
+        "-w",
+        "--wake",
+        action="store_true",
+        default=False,
+        help="Measure battery impact during use",
     )
 
     args = parser.parse_args()

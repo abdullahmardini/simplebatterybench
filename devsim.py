@@ -1,3 +1,14 @@
+"""
+This is just a playbed for some synthetic benchmark ideas.
+The goals are:
+1. deterministic.
+2. scorable
+3. indicative of real world performance
+
+on a side note, i now realize why writing something like a geekbench clone is really hard
+maybe I should just USE geekbench. or a (clone).
+"""
+
 import os
 import subprocess
 import time
