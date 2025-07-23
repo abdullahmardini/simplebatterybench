@@ -6,13 +6,13 @@ The goals are:
 3. indicative of real world performance
 
 on a side note, i now realize why writing something like a geekbench clone is really hard
-maybe I should just USE geekbench. or a (clone).
+maybe I should just USE geekbench (or a clone).
 """
 
 import os
 import subprocess
 import time
-import hashlib
+import math
 import tempfile
 import random
 
@@ -31,34 +31,26 @@ def quick_bench(time_secs: int) -> list[str]:
     return lines
 
 
-def cpu_burst(work_size: int = 1_000_000):
+def is_prime(n: int) -> bool:
     """
-    Simulate CPU-bound load similar to sorting or compiling
+    quick and dirty prime check. this doesn't need to be bullet proof
+    I also don't care about negative numbers
     """
-    data = [random.random() for _ in range(work_size)]
-    data.sort()
+    if n <= 3:
+        return True
+    sqrt = int(math.sqrt(n))
+    for i in range(2, sqrt + 1):
+        if n % i == 0:
+            return False
+    return True
 
 
-def io_burst(tmpdir: str = "/tmp", file_size: int = 10**6, file_count: int = 5):
-    """
-    Simulate disk I/O: write and read several files
-    """
-    for i in range(file_count):
-        path = os.path.join(tmpdir, f"tempfile_{i}.txt")
-        with open(path, "w") as f:
-            f.write("A" * file_size)
-        with open(path, "rb") as f:
-            hashlib.sha256(f.read()).hexdigest()
-
-
-def memory_use(size: int = 10_000_000):
-    """
-    Allocate and process a large list to simulate memory usage
-    """
-    data = list(range(size))
-    total = sum(data)
-    del data
-    return total
+def cpu_task(num_primes: int = 500) -> int:
+    count = 0
+    for i in range(2, num_primes):
+        if is_prime(i):
+            count += 1
+    return count
 
 
 def dev_workload(duration_secs):
