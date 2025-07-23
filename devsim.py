@@ -17,6 +17,22 @@ import tempfile
 import random
 
 
+def events_per_second(name="task"):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            start = time.time()
+            count = func(*args, **kwargs)
+            end = time.time()
+            duration = end - start
+            eps = count / duration if duration > 0 else 0
+            print(f"{name}: {count} events in {duration:.2f}s ({eps:.2f} events/sec)")
+            return count
+
+        return wrapper
+
+    return decorator
+
+
 def quick_bench(time_secs: int) -> list[str]:
     """
     Sysbench is deterministic and gives some kind of score
@@ -45,6 +61,7 @@ def is_prime(n: int) -> bool:
     return True
 
 
+@events_per_second("CPU")
 def cpu_task(num_primes: int = 500) -> int:
     count = 0
     for i in range(2, num_primes):
