@@ -1,10 +1,20 @@
 # What is this?
+
 I just want to know if the different battery tuning stuff, i.e. `ppd` vs `tlp` vs `tuneD` actually make any difference, and if there's a difference between them.
-Note that your particular laptop model will matter a lot, depending on firmware bugs and how that responds to different tuning knobs. It looks like the defaults are fantastic on Thinkpads.
+
+I think it's important that the results be produced during some kind of lightload, the kind you would spend in an IDE and a browser. Also it should probably measure the performance during that load. Basically a benchmark running at 10% system capacity. Which turns out that's not a trivial thing.
+
+# What did I get?
+
+The particular laptop model matters a lot, depending on firmware bugs and how that responds to different tuning knobs.
+It looks like the defaults are fantastic on Thinkpads.
+
+On a Thinkpad x12 gen 1, I got my best results with a few TLP tweaks, and worst with tuneD.
+
 
 # TODO
 * Improve the sleep check. AMD has a script that measures how long you were actually in s2idle, I should probably figure out how they do that and take inspiration / shameless plagiarize.
-* Improve the wake check. Need to prevent suspend in the actual script, improve the wake and idle parts. I ran this with my browser open.
+* Improve the synthetic benchmark part.
 
 # What did I get?
 ```
