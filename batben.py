@@ -107,15 +107,12 @@ def main():
         "-w",
         "--wake",
         action="store_true",
-        default=False,
+        default=True,
         help="Measure battery impact during use",
     )
 
     args = parser.parse_args()
     test_time = args.time
-
-    if not args.sleep and not args.wake:
-        args.sleep = args.wake = True
 
     if args.sleep:
         sleep_check(test_time)

@@ -79,9 +79,7 @@ def dev_workload(duration_secs):
 
     while (time.time() - start) < duration_secs:
         print(f"elapsed time {(time.time() - start)}")
-        cpu_burst()
-        io_burst(tmpdir)
-        memory_use()
+        is_prime(5000)
         time.sleep(random.uniform(1.0, 2.0))  # idle pause
 
     try:
