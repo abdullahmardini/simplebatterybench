@@ -1,5 +1,9 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "simplebatterybench"
+name = "batben"
 dynamic = ["version"]
 description = "linux battery benchmark"
 readme = "README.md"
@@ -11,7 +15,14 @@ dependencies = [
 ]
 
 [tool.setuptools.dynamic]
-version = {attr = "batben.__version__"}
+version = { attr = "batben.__version__" }
+
+[tool.setuptools]
+packages = ["batben"]
 
 [project.scripts]
-batben = "batben.cli:main"
+batben = "batben.cli:cli"
+
+[project.optional-dependencies]
+test = ["pytest"]
+dev = ["pytest", "pyinstaller"]
