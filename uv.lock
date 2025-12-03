@@ -60,7 +60,6 @@ wheels = [
 
 [[package]]
 name = "simplebatterybench"
-version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "click" },
