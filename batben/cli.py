@@ -3,8 +3,8 @@
 import sys
 import click
 
-from . import __version__  # if you expose version in __init__
-from . import battery, workload, sleep as sleep_mod
+from . import __version__
+#from . import battery, workload, sleep as sleep_mod
 
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
@@ -21,7 +21,7 @@ def cli():
     "--time",
     "duration",
     type=int,
-    default=60,
+    default=30,
     show_default=True,
     help="Run benchmark for N seconds.",
 )
