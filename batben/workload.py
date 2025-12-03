@@ -33,20 +33,6 @@ def events_per_second(name="task"):
     return decorator
 
 
-def quick_bench(time_secs: int) -> list[str]:
-    """
-    Sysbench is deterministic and gives some kind of score
-    """
-    command = ["sysbench", "--threads=8", f"--time={time_secs}", "cpu", "run"]
-    output = subprocess.check_output(command)
-
-    lines = output.decode("utf-8").split("\n")
-    for line in lines:
-        if "events per second:" in line:
-            return [line]
-    return lines
-
-
 def is_prime(n: int) -> bool:
     """
     quick and dirty prime check. this doesn't need to be bullet proof
@@ -69,22 +55,3 @@ def cpu_task(num_primes: int = 500) -> int:
             count += 1
     return count
 
-
-def dev_workload(duration_secs):
-    """
-    Simulate a developer workload for the given duration
-    """
-    start = time.time()
-    tmpdir = tempfile.mkdtemp()
-
-    while (time.time() - start) < duration_secs:
-        print(f"elapsed time {(time.time() - start)}")
-        is_prime(5000)
-        time.sleep(random.uniform(1.0, 2.0))  # idle pause
-
-    try:
-        for f in os.listdir(tmpdir):
-            os.remove(os.path.join(tmpdir, f))
-        os.rmdir(tmpdir)
-    except Exception:
-        pass  # Not critical if cleanup fails
