@@ -3,6 +3,7 @@ import functools
 import psutil
 from pydbus import SystemBus
 
+
 def _get_battery_energy() -> float:
     """
     Gets the current battery energy (in Wh) by querying the UPower D-Bus service.
@@ -10,15 +11,12 @@ def _get_battery_energy() -> float:
     bus = SystemBus()
 
     try:
-        battery = bus.get(
-            "org.freedesktop.UPower",
-            "/org/freedesktop/UPower/devices/battery_BAT0"
-        )
+        battery = bus.get("org.freedesktop.UPower", "/org/freedesktop/UPower/devices/battery_BAT0")
     except Exception as e:
         print(f"Error accessing D-Bus object. Is this a laptop?\n    {e}")
         return 0.0
 
-    return battery.Energy # energy_wh
+    return battery.Energy  # energy_wh
 
 
 def _get_battery_level() -> float:

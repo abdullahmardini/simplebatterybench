@@ -26,3 +26,18 @@ dev = [
     "pytest>=9.0.1",
     "ruff>=0.14.7",
 ]
+
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+lint.select = ["E", "W", "F", "I"] 
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    "__pypackages__",
+]
+
+[tool.ruff.format]
+docstring-code-format = true

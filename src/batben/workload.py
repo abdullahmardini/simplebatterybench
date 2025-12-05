@@ -9,12 +9,13 @@ on a side note, i now realize why writing something like a geekbench clone is re
 maybe I SHOULD just ise geekbench (or a clone).
 """
 
-import time
-import random
-import numpy as np
-import httpx
-import os
 import math
+import os
+import random
+import time
+
+import httpx
+import numpy as np
 
 
 def events_per_second(name="task"):
@@ -109,9 +110,7 @@ def mem_task(size_mb=100, iterations=50):
 @events_per_second("GPU")
 def gpu_task(matrix_size=512, iterations=10):
     """Repeatedly performs large matrix multiplications with NumPy."""
-    print(
-        f"Starting GPU/Math task: {matrix_size}x{matrix_size} matrices, {iterations} iterations."
-    )
+    print(f"Starting GPU/Math task: {matrix_size}x{matrix_size} matrices, {iterations} iterations.")
     for i in range(iterations):
         # Create large matrices, forces allocation and movement of data
         A = np.random.rand(matrix_size, matrix_size)
@@ -195,9 +194,7 @@ def net_task(target_url="https://www.google.com/robots.txt", iterations=50):
 
         except httpx.exceptions.RequestException as e:
             # Handle connection errors gracefully without stopping the benchmark
-            print(
-                f"  Warning: Request failed on iteration {i + 1} ({e.__class__.__name__})"
-            )
+            print(f"  Warning: Request failed on iteration {i + 1} ({e.__class__.__name__})")
 
         time.sleep(0.1)  # Add a small delay to avoid overwhelming the target server
     return successful_requests
