@@ -1,20 +1,16 @@
 """
 This is just a playbed for some synthetic benchmark ideas.
-The goals are:
-1. deterministic.
+The goals are (in order):
+1. deterministic
 2. scorable
 3. indicative of real world performance
 
 on a side note, i now realize why writing something like a geekbench clone is really hard
-maybe I should just USE geekbench (or a clone).
+maybe I SHOULD just ise geekbench (or a clone).
 """
 
-import os
-import subprocess
 import time
-import math
-import tempfile
-import random
+import cpu_task
 
 
 def events_per_second(name="task"):
@@ -33,25 +29,10 @@ def events_per_second(name="task"):
     return decorator
 
 
-def is_prime(n: int) -> bool:
-    """
-    quick and dirty prime check. this doesn't need to be bullet proof
-    I also don't care about negative numbers
-    """
-    if n <= 3:
-        return True
-    sqrt = int(math.sqrt(n))
-    for i in range(2, sqrt + 1):
-        if n % i == 0:
-            return False
-    return True
-
-
 @events_per_second("CPU")
 def cpu_task(num_primes: int = 500) -> int:
     count = 0
     for i in range(2, num_primes):
-        if is_prime(i):
+        if cpu_task.is_prime(i):
             count += 1
     return count
-
