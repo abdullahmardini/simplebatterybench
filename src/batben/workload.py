@@ -10,8 +10,9 @@ maybe I SHOULD just ise geekbench (or a clone).
 """
 
 import time
-import cpu_task
-
+import os
+import socket
+import math
 
 def events_per_second(name="task"):
     def decorator(func):
@@ -28,11 +29,25 @@ def events_per_second(name="task"):
 
     return decorator
 
+# CPU tasks
+def is_prime(n: int) -> bool:
+    """
+    quick and dirty prime check. this doesn't need to be bullet proof
+    I also don't care about negative numbers
+    """
+    if n <= 3:
+        return True
+    sqrt = int(math.sqrt(n))
+    for i in range(2, sqrt + 1):
+        if n % i == 0:
+            return False
+    return True
+
 
 @events_per_second("CPU")
-def cpu_task(num_primes: int = 500) -> int:
+def cpu_step(num_primes: int = 500) -> int:
     count = 0
     for i in range(2, num_primes):
-        if cpu_task.is_prime(i):
+        if is_prime(i):
             count += 1
     return count
