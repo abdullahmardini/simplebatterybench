@@ -45,6 +45,7 @@ def is_prime(n: int) -> bool:
     quick and dirty prime check. this doesn't need to be bullet proof
     I also don't care about negative numbers
     """
+    # This is basically to capture the base case
     if n <= 3:
         return True
     sqrt = int(math.sqrt(n))
@@ -76,9 +77,7 @@ def mem_task(size_mb=100, iterations=50):
     """
     Allocates and fills a large list repeatedly.
     """
-    # Convert MB to number of integers (approximate)
-    # A standard Python int object is about 28 bytes in 64-bit, let's aim for 4MB chunks
-    # 4MB / 28 bytes/int ~= 142,857 ints
+    # A standard Python int object is about 28 bytes in 64-bit
     chunk_size = int(size_mb * 1024 * 1024 / 28)
 
     print(f"Starting MEM task: {size_mb}MB chunks, {iterations} iterations.")
@@ -87,7 +86,7 @@ def mem_task(size_mb=100, iterations=50):
         # This stresses the memory allocation mechanism and the memory itself.
         big_list = [random.randint(0, 1000) for _ in range(chunk_size)]
 
-        # 2. Minimal work on the list (optional, adds more realistic memory access stress)
+        # 2. Minimal work on the list
         _ = sum(big_list) % 100  # Inefficiently calculate a hash/sum
 
         # 3. Deallocation: Delete the reference to free the memory.
@@ -192,9 +191,9 @@ def net_task(target_url="https://www.google.com/robots.txt", iterations=50):
             _ = response.status_code
             successful_requests += 1
 
-        except httpx.exceptions.RequestException as e:
+        except httpx.HTTPError as e:
             # Handle connection errors gracefully without stopping the benchmark
             print(f"  Warning: Request failed on iteration {i + 1} ({e.__class__.__name__})")
 
-        time.sleep(0.1)  # Add a small delay to avoid overwhelming the target server
+        time.sleep(0.1)  # Add a small delay to avoid getting rate limited
     return successful_requests

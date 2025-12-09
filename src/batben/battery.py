@@ -1,5 +1,6 @@
-import time
 import functools
+import time
+
 import psutil
 from pydbus import SystemBus
 
