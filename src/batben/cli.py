@@ -4,7 +4,7 @@ import sys
 import click
 
 from . import __version__
-#from . import battery, workload, sleep as sleep_mod
+# from . import battery, workload, sleep as sleep_mod
 
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
@@ -35,7 +35,6 @@ def cli():
 )
 def bench_cmd(duration: int, workload: str) -> None:
     """Entry point for the benchmark command."""
-    
 
 
 @cli.command("sleep-check", help="Measure battery during suspend/resume cycles.")
@@ -63,10 +62,7 @@ def bench_cmd(duration: int, workload: str) -> None:
 def sleep_check_cmd(duration: int, no_sleep: bool, no_wake: bool) -> None:
     """Entry point for sleep/wake testing."""
     # TODO: hook into `sleep_mod.quick_sleep`, `battery.sleep_check`, `battery.wake_check`.
-    click.echo(
-        "[stub] sleep-check: "
-        f"duration={duration}s, no_sleep={no_sleep}, no_wake={no_wake}"
-    )
+    click.echo(f"[stub] sleep-check: duration={duration}s, no_sleep={no_sleep}, no_wake={no_wake}")
     sys.exit(0)
 
 
